@@ -112,13 +112,15 @@ module.exports = require("react");
 
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
-exports.Button = exports.ButtonGroup = undefined;
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
+exports.ButtonGroup = ButtonGroup;
+exports.Button = Button;
 
 var _react = __webpack_require__(1);
 
@@ -128,96 +130,64 @@ __webpack_require__(0);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function ButtonGroup(_ref) {
+  var _this = this;
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+  var className = _ref.className,
+      transition = _ref.transition,
+      trasitionDuration = _ref.trasitionDuration,
+      children = _ref.children;
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+  var _useState = (0, _react.useState)(null),
+      _useState2 = _slicedToArray(_useState, 2),
+      selected = _useState2[0],
+      setSelected = _useState2[1];
 
-var ButtonGroup = function (_Component) {
-    _inherits(ButtonGroup, _Component);
+  var me = (0, _react.useRef)(null);
+  var bound = selected ? selected.getBoundingClientRect() : {};
+  var boundMe = me.current ? me.current.getBoundingClientRect() : {};
+  var childs = _react.Children.map(children, function (c) {
+    return c.type === Button && _react2.default.createElement(c.type, _extends({}, c.props, { onMouseOver: function onMouseOver(el) {
+        return setSelected(el);
+      } }));
+  });
 
-    function ButtonGroup(props) {
-        _classCallCheck(this, ButtonGroup);
+  return _react2.default.createElement(
+    'div',
+    _extends({ ref: function ref(el) {
+        return _this.me = el;
+      } }, this.props, { className: 'fluid-button-container ' + (className || ''), onMouseLeave: function onMouseLeave() {
+        return setSelected(null);
+      } }),
+    selected && me && _react2.default.createElement('span', { className: 'fluid-button-highglight', style: {
+        left: bound.left - boundMe.left,
+        top: bound.top - boundMe.top,
+        width: bound.width,
+        height: bound.height,
+        transition: transition ? transition : "all 0.35s",
+        transitionDuration: trasitionDuration ? trasitionDuration : "0.35s"
+      }
+    }),
+    childs
+  );
+};
 
-        var _this = _possibleConstructorReturn(this, (ButtonGroup.__proto__ || Object.getPrototypeOf(ButtonGroup)).call(this, props));
+function Button(_ref2) {
+  var style = _ref2.style,
+      onMouseOver = _ref2.onMouseOver,
+      onClick = _ref2.onClick,
+      children = _ref2.children;
 
-        _this.state = {
-            selected: null
-        };
-        return _this;
-    }
-
-    _createClass(ButtonGroup, [{
-        key: 'render',
-        value: function render() {
-            var _this2 = this;
-
-            var bound = this.state.selected ? this.state.selected.getBoundingClientRect() : {};
-            var boundMe = this.me ? this.me.getBoundingClientRect() : {};
-            var highlight = this.state.selected && this.me ? _react2.default.createElement('span', { className: 'fluid-button-highglight', style: {
-                    left: bound.left - boundMe.left,
-                    top: bound.top - boundMe.top,
-                    width: bound.width,
-                    height: bound.height,
-                    transition: this.props.transition ? this.props.transition : "all 0.35s",
-                    transitionDuration: this.props.trasitionDuration ? this.props.trasitionDuration : "0.35s"
-                } }) : "";
-
-            var childs = _react2.default.Children.map(this.props.children, function (child, i) {
-                if (child.type === Button) return _react2.default.createElement(child.type, _extends({}, child.props, {
-                    onMouseOver: function onMouseOver(ref) {
-                        return _this2.setState({ selected: ref });
-                    } }));
-            });
-
-            return _react2.default.createElement(
-                'div',
-                _extends({ ref: function ref(el) {
-                        return _this2.me = el;
-                    } }, this.props, { className: this.props.className ? "fluid-button-container " + this.props.className : "fluid-button-container", onMouseLeave: function onMouseLeave() {
-                        return _this2.setState({ selected: null });
-                    } }),
-                highlight,
-                childs
-            );
-        }
-    }]);
-
-    return ButtonGroup;
-}(_react.Component);
-
-var Button = function (_Component2) {
-    _inherits(Button, _Component2);
-
-    function Button() {
-        _classCallCheck(this, Button);
-
-        return _possibleConstructorReturn(this, (Button.__proto__ || Object.getPrototypeOf(Button)).apply(this, arguments));
-    }
-
-    _createClass(Button, [{
-        key: 'render',
-        value: function render() {
-            var _this4 = this;
-
-            return _react2.default.createElement(
-                'div',
-                { onClick: this.props.onClick, style: this.props.style, className: 'fluid-button', onMouseOver: function onMouseOver() {
-                        return _this4.props.onMouseOver(_this4.selectedRef);
-                    }, ref: function ref(elem) {
-                        _this4.selectedRef = elem;
-                    } },
-                this.props.children
-            );
-        }
-    }]);
-
-    return Button;
-}(_react.Component);
-
-exports.ButtonGroup = ButtonGroup;
-exports.Button = Button;
+  var selectedRef = (0, _react.useRef)(null);
+  var handleMouseOver = function handleMouseOver() {
+    return onMouseOver(selectedRef.current);
+  };
+  return _react2.default.createElement(
+    'div',
+    { onClick: onClick, style: style, className: 'fluid-button', onMouseOver: handleMouseOver, ref: selectedRef },
+    children
+  );
+}
 
 /***/ }),
 /* 3 */
@@ -228,7 +198,7 @@ exports = module.exports = __webpack_require__(4)(undefined);
 
 
 // module
-exports.push([module.i, ".fluid-button-highglight {\r\n    background-color: #073642;\r\n    position: absolute;\r\n    opacity: 1;\r\n    z-index: -1;\r\n}\r\n\r\n.fluid-button{\r\n    flex-grow: 1;\r\n    height:40px;\r\n    text-align: center;\r\n    color: #93a1a1;\r\n    background-color: transparent;\r\n    overflow: hidden;\r\n    text-overflow: ellipsis;\r\n}\r\n\r\n.fluid-button-container{\r\n    position:relative;\r\n    z-index: 1;\r\n    width:100%;\r\n    height:40px;\r\n    display: flex;\r\n    justify-content: space-around;\r\n    background-color: #001f27;\r\n}\r\n", ""]);
+exports.push([module.i, ".fluid-button-highglight {\n    background-color: #073642;\n    position: absolute;\n    opacity: 1;\n    z-index: -1;\n}\n\n.fluid-button {\n    flex-grow: 1;\n    height: 40px;\n    text-align: center;\n    color: #93a1a1;\n    background-color: transparent;\n    overflow: hidden;\n    text-overflow: ellipsis;\n}\n\n.fluid-button-container {\n    position: relative;\n    z-index: 1;\n    width: 100%;\n    height: 40px;\n    display: flex;\n    justify-content: space-around;\n    background-color: #001f27;\n}\n", ""]);
 
 // exports
 
