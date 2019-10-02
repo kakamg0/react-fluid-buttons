@@ -5,10 +5,10 @@
   "main": "build/index.js",
   "repository": "https://github.com/ZaninAndrea/react-fluid-buttons",
   "peerDependencies": {
-    "react": "^15.5.4"
+    "react": "^16.10.1"
   },
   "dependencies": {
-    "react": "^15.5.4",
+    "react": "^16.10.1",
     "webpack": "^2.6.1"
   },
   "scripts": {
